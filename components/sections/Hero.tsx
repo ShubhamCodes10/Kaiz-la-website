@@ -1,8 +1,9 @@
 "use client"
 
-import { motion, type Variants } from "framer-motion"
+import { motion, type Variants, useInView } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight, Award } from "lucide-react"
+import { useRef, useEffect, useState } from "react"
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -26,12 +27,55 @@ const itemVariants: Variants = {
   },
 }
 
+function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0)
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true })
+
+  useEffect(() => {
+    if (isInView) {
+      const duration = 2000
+      const startTime = Date.now()
+      
+      const animate = () => {
+        const elapsed = Date.now() - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        
+        const easeOut = 1 - Math.pow(1 - progress, 3)
+        const currentCount = Math.floor(target * easeOut)
+        
+        setCount(currentCount)
+        
+        if (progress < 1) {
+          requestAnimationFrame(animate)
+        }
+      }
+      
+      requestAnimationFrame(animate)
+    }
+  }, [isInView, target])
+
+  return (
+    <div ref={ref} className="text-2xl sm:text-3xl font-bold text-secondary drop-shadow-sm">
+      {count.toLocaleString()}{suffix}
+    </div>
+  )
+}
+
 export default function Hero() {
   return (
     <section className="relative bg-background overflow-hidden">
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/5" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,theme(colors.primary)_1px,transparent_1px)] bg-[length:50px_50px]" />
+      <img 
+        src="/KaizLa-Backdrop.png" 
+        alt="Background" 
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-white/28" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/18 via-slate-50/15 to-white/12" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-slate-50/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-50/8 via-white/8 to-gray-50/8 opacity-75" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,theme(colors.gray.150)_1px,transparent_1px)] bg-[length:50px_50px] opacity-18" />
       </div>
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,7 +106,7 @@ export default function Hero() {
               </p>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="flex flex-wrap items-center justify-center gap-4 pt-4"
               variants={itemVariants}
             >
@@ -70,15 +114,23 @@ export default function Hero() {
                 href="#"
                 className="group inline-flex items-center justify-center rounded-lg bg-secondary px-6 py-3 text-base font-semibold text-white shadow-lg transition-all duration-300 ease-in-out hover:bg-secondary/90 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 focus:ring-offset-background"
               >
-                Talk to an Expert
+                Talk to KaiExpert
                 <ArrowRight className="ml-2 h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
-              
+
               <Link
                 href="#services"
                 className="group inline-flex items-center justify-center rounded-lg bg-secondary px-6 py-3 text-base font-semibold text-white shadow-lg transition-all duration-300 ease-in-out hover:bg-secondary/90 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 focus:ring-offset-background"
               >
-                Know More
+                The Kaiz La Advantage
+                <ArrowRight className="ml-2 h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+
+              <Link
+                href="#services"
+                className="group inline-flex items-center justify-center rounded-lg bg-secondary px-6 py-3 text-base font-semibold text-white shadow-lg transition-all duration-300 ease-in-out hover:bg-secondary/90 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 focus:ring-offset-background"
+              >
+                Get an instant quote
                 <ArrowRight className="ml-2 h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </motion.div>
@@ -88,18 +140,18 @@ export default function Hero() {
               variants={itemVariants}
             >
               <div className="text-center p-4 rounded-lg bg-card/80 backdrop-blur-lg shadow-lg hover:shadow-lg transition-shadow duration-200">
-                <div className="text-2xl sm:text-3xl font-bold text-secondary drop-shadow-sm">1000+</div>
-                <div className="text-sm text-muted-foreground mt-1">Clients</div>
+                <AnimatedCounter target={1000} suffix="+" />
+                <div className="text-sm text-muted mt-1">Clients</div>
               </div>
 
               <div className="text-center p-4 rounded-lg bg-card/80 backdrop-blur-lg shadow-lg hover:shadow-lg transition-shadow duration-200">
-                <div className="text-2xl sm:text-3xl font-bold text-secondary drop-shadow-sm">5 Million+</div>
-                <div className="text-sm text-muted-foreground mt-1">Product Served</div>
+                <AnimatedCounter target={5000000} suffix="+" />
+                <div className="text-sm text-muted mt-1">Product Served</div>
               </div>
 
               <div className="col-span-2 lg:col-span-1 text-center p-4 rounded-lg bg-card/80 backdrop-blur-lg shadow-lg hover:shadow-lg transition-shadow duration-200">
-                <div className="text-2xl sm:text-3xl font-bold text-secondary drop-shadow-sm">2009</div>
-                <div className="text-sm text-muted-foreground mt-1">Founded</div>
+                <AnimatedCounter target={2009} />
+                <div className="text-sm text-muted mt-1">Founded</div>
               </div>
             </motion.div>
           </motion.div>

@@ -84,7 +84,7 @@ export default function About() {
             <motion.div variants={itemVariants} className="lg:col-span-7 space-y-6 lg:space-y-8">
               <div className="space-y-4 lg:space-y-6">
                 <p className="text-lg sm:text-xl lg:text-2xl text-foreground leading-relaxed font-medium">
-                 <span className="text-secondary">Kaiz La</span>  is a leading sourcing-as-a-service company based in the heart of China, facilitating seamless
+                  <span className="text-secondary">Kaiz La</span>  is a leading sourcing-as-a-service company based in the heart of China, facilitating seamless
                   trade between Chinese suppliers and clients across India and the Middle East.
                 </p>
                 <p className="text-base lg:text-lg text-muted-foreground leading-relaxed">
@@ -104,7 +104,7 @@ export default function About() {
                     </div>
                     <div className="flex-grow">
                       <h4 className="font-bold text-foreground transition-colors duration-300 group-hover:text-primary">Headquarters</h4>
-                      <p className="text-sm text-muted-foreground">Shenzhen & Zhongshan, China</p>
+                      <p className="text-sm text-muted-foreground">Shenzhen, China</p>
                     </div>
                   </li>
 
@@ -115,7 +115,7 @@ export default function About() {
                     </div>
                     <div className="flex-grow">
                       <h4 className="font-bold text-foreground transition-colors duration-300 group-hover:text-primary">Markets Served</h4>
-                      <p className="text-sm text-muted-foreground">India & Middle East & Southeast Asia</p>
+                      <p className="text-sm text-muted-foreground"> India, Middle East & Southeast Asia</p>
                     </div>
                   </li>
 
@@ -126,7 +126,8 @@ export default function About() {
                     </div>
                     <div className="flex-grow">
                       <h4 className="font-bold text-foreground transition-colors duration-300 group-hover:text-primary">Service Model</h4>
-                      <p className="text-sm text-muted-foreground">End-to-End Product Sourcing</p>
+                      <p className="text-sm text-muted-foreground">End-to-End Product Sourcing & Logistics
+                      </p>
                     </div>
                   </li>
 

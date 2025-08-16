@@ -36,7 +36,7 @@ export default function Contact() {
     },
     {
       icon: Phone,
-      title: "Call Us",
+      title: "Call, WeChat or WhatsApp Us",
       details: "+86 138 0013 8000",
       description: "Mon-Fri, 8am - 6pm CST.",
     },

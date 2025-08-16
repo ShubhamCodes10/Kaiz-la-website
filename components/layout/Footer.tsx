@@ -37,6 +37,7 @@ export default function Footer() {
 
   const companyLinks = [
     { name: "About Us", href: "#about" },
+    { name: "The Kaiz La Advantage", href: "#why-choose-us" },
     { name: "How It Works", href: "#how-it-works" },
     { name: "Why Choose Us", href: "#why-choose-us" },
     { name: "Contact Us", href: "#contact" },
@@ -58,11 +59,11 @@ export default function Footer() {
             <motion.div variants={itemVariants} className="md:col-span-2">
               <a href="#" className="mb-5 inline-block">
                 <Image
-                  src="/logo.png"
+                  src="/image.png"
                   alt="Kaiz La Logo"
                   width={150}
                   height={80}
-                  className="transition-transform duration-300 hover:scale-105 filter brightness-0 invert"
+                  className="transition-transform duration-300 hover:scale-105"
                   priority
                 />
               </a>

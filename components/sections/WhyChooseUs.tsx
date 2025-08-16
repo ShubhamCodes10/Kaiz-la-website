@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence, type Variants } from "framer-motion"
 import { useState } from "react"
-import { Award, ShieldCheck, Clock, Brain, ArrowRight, CheckCircle } from "lucide-react"
+import { Award, ShieldCheck, Clock, Brain, ArrowRight, CheckCircle, UserCheck } from "lucide-react"
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -28,29 +28,36 @@ const itemVariants = {
 }
 
 const contentVariants = {
-    hidden: { opacity: 0, x: 20 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.5,
-        ease: 'easeOut' as const,
-      },
+  hidden: { opacity: 0, x: 20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.5,
+      ease: 'easeOut' as const,
     },
-    exit: {
-        opacity: 0,
-        x: -20,
-        transition: {
-          duration: 0.3,
-          ease: 'easeIn' as const,
-        },
-      },
-  };
+  },
+  exit: {
+    opacity: 0,
+    x: -20,
+    transition: {
+      duration: 0.3,
+      ease: 'easeIn' as const,
+    },
+  },
+};
 
 export default function WhyChooseUs() {
   const [activeTab, setActiveTab] = useState(0);
 
   const tabsData = [
+    {
+      icon: ShieldCheck,
+      tabName: "3600 Confidentiality and Quality",
+      title: "3600 Confidentiality and Quality - 100% Confidentiality & Zero IP Leakage",
+      description: "From enquiry to delivery, we safeguard your business intelligence and product integrity at every stage of the sourcing journey. Our NDA-backed supplier and partner network operates under strict, pre-agreed confidentiality protocols, ensuring your designs, pricing, and market strategies remain fully protected. With Kaiz La, you get transparent quality control and absolute peace of mind—no leaks, no surprises.",
+      stat: "100% Confidentiality & Zero IP Leakage",
+    },
     {
       icon: Award,
       tabName: "Proven Expertise",
@@ -62,7 +69,7 @@ export default function WhyChooseUs() {
       icon: ShieldCheck,
       tabName: "Verified Network",
       title: "Access an Elite, Vetted Supplier Network",
-      description: "We connect you with top-tier manufacturers, ensuring factory-direct pricing and uncompromising quality. Every partner is rigorously vetted to meet our high standards.",
+      description: " We connect you with top-tier manufacturers, delivering factory-direct pricing and uncompromising quality. Every partner is rigorously vetted to meet Kaiz La's high standards. Our strict in-house QA checks—conducted at multiple production stages—ensure your products meet exact specifications. Before loading, you receive a detailed quality inspection report, giving you complete transparency and confidence in every shipment.",
       stat: "500+ Trusted Partners",
     },
     {
@@ -71,6 +78,17 @@ export default function WhyChooseUs() {
       title: "Significantly Faster Delivery Times",
       description: "Our local presence in key markets and a fully integrated supply chain allow us to cut through delays and get your products to you faster.",
       stat: "Up to 40% Faster Delivery",
+    },
+    {
+      icon: UserCheck,
+      tabName: "Customer Experience Support",
+      title: "Firsthand Confidence Before You Buy",
+      description: (
+        <>
+          We invite you to China to personally experience your products before purchase. From the moment you arrive, Kaiz La handles every detail of your itinerary — travel, factory visits, product inspections, and more. A dedicated <span className="text-secondary font-bold">Kaiz La Customer Success Expert</span> accompanies you throughout the journey, ensuring seamless communication, transparency, and complete confidence in your sourcing decisions.
+        </>
+      ),
+      stat: "100% On-Site Inspection Support",
     },
     {
       icon: Brain,
@@ -142,15 +160,15 @@ export default function WhyChooseUs() {
                   >
                     <div className="mb-6 pb-6 border-b border-border/10">
                       <h3 className="text-3xl lg:text-4xl font-bold text-secondary mb-3">{tabsData[activeTab].title}</h3>
-                      <p className="text-lg text-muted-foreground leading-relaxed">
+                      <div className="text-lg text-muted-foreground leading-relaxed">
                         {tabsData[activeTab].description}
-                      </p>
+                      </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center">
-                            <CheckCircle className="w-5 h-5 text-accent"/>
-                        </div>
-                        <p className="text-lg font-semibold text-accent">{tabsData[activeTab].stat}</p>
+                      <div className="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center">
+                        <CheckCircle className="w-5 h-5 text-accent" />
+                      </div>
+                      <p className="text-lg font-semibold text-accent">{tabsData[activeTab].stat}</p>
                     </div>
                   </motion.div>
                 </AnimatePresence>
