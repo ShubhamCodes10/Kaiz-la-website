@@ -80,7 +80,7 @@ export function Header() {
           transition-all duration-300 ease-in-out
           ${scrollState.isScrolled
             ? "bg-card/95 backdrop-blur-md shadow-lg"
-            : "bg-card/80 backdrop-blur-sm"
+            : "bg-transparent"
           }
           ${scrollState.isVisible
             ? "translate-y-0 opacity-100"
@@ -137,6 +137,7 @@ export function Header() {
                   transition-all duration-200 font-medium
                   text-sm xl:text-base
                   focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                  bg-card/80 backdrop-blur-sm
                 "
               >
                 Get Quote
@@ -160,10 +161,11 @@ export function Header() {
               onClick={toggleMobileMenu}
               className="
                 lg:hidden p-2 rounded-md text-foreground 
-                hover:text-primary hover:bg-background 
+                hover:text-primary hover:bg-card/50 
                 transition-colors duration-200
                 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
                 min-w-[2.75rem] min-h-[2.75rem] flex items-center justify-center
+                backdrop-blur-sm
               "
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMobileMenuOpen}
@@ -253,7 +255,6 @@ export function Header() {
           </div>
         </div>
       </div>
-
       <div className="h-16 sm:h-18 lg:h-20" aria-hidden="true" />
     </>
   )

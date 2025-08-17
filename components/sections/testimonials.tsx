@@ -82,22 +82,51 @@ export default function Testimonials() {
         <div className="bg-background text-foreground font-sans antialiased">
             <section className="py-16 lg:py-24 overflow-hidden">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.5 }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center mb-12 lg:mb-16"
-                    >
-                        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary mb-3">
-                            What Our <span className="text-secondary">Clients Say</span>
-                        </h2>
-                        <div className="w-24 h-1.5 bg-secondary mx-auto rounded-full shadow-sm mb-4"></div>
-                        <p className="text-lg text-muted max-w-3xl mx-auto">
-                            Our commitment to excellence is reflected in the words of our clients.
-                        </p>
-                    </motion.div>
 
+                    <div className="text-center mb-16 lg:mb-20 relative">
+                        {/* Background Elements */}
+                        <div className="absolute inset-0 opacity-5">
+                            <div className="absolute top-10 left-1/4 w-40 h-40 bg-secondary rounded-full blur-3xl"></div>
+                            <div className="absolute bottom-10 right-1/4 w-32 h-32 bg-primary rounded-full blur-3xl"></div>
+                        </div>
+
+                        {/* Main Heading */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, amount: 0.5 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            className="relative z-10 mb-12"
+                        >
+                            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary mb-6">
+                                What Our <span className="text-secondary">Clients Say</span>
+                            </h2>
+                            <div className="w-24 h-1.5 bg-secondary mx-auto rounded-full shadow-sm mb-6"></div>
+                        </motion.div>
+
+                        {/* Quote as Subtitle */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                            className="text-center max-w-4xl mx-auto"
+                        >
+                            <blockquote className="text-lg lg:text-xl xl:text-2xl font-light text-foreground leading-relaxed mb-4">
+                                <span className="text-secondary font-medium">
+                                    "We simplify global sourcing
+                                </span>
+                                <span className="text-foreground/90">
+                                    {" "}by offering comprehensive end-to-end services that extend far beyond traditional procurement."
+                                </span>
+                            </blockquote>
+                            <div className="text-secondary font-bold text-sm tracking-wider opacity-80">
+                                — KAIZ LA TEAM
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    {/* Testimonials Slider */}
                     <div className="relative flex items-center justify-center">
                         <motion.button
                             onClick={prevTestimonial}

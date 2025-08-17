@@ -53,10 +53,21 @@ export default function WhyChooseUs() {
   const tabsData = [
     {
       icon: ShieldCheck,
-      tabName: "3600 Confidentiality and Quality",
-      title: "3600 Confidentiality and Quality - 100% Confidentiality & Zero IP Leakage",
+      tabName: "360\u00B0 Confidentiality",
+      title: "100% Confidentiality & Zero IP Leakage",
       description: "From enquiry to delivery, we safeguard your business intelligence and product integrity at every stage of the sourcing journey. Our NDA-backed supplier and partner network operates under strict, pre-agreed confidentiality protocols, ensuring your designs, pricing, and market strategies remain fully protected. With Kaiz La, you get transparent quality control and absolute peace of mind—no leaks, no surprises.",
       stat: "100% Confidentiality & Zero IP Leakage",
+    },
+      {
+      icon: UserCheck,
+      tabName: "Customer Experience Support",
+      title: "Firsthand Confidence Before You Buy",
+      description: (
+        <>
+          We invite you to China to personally experience your products before purchase. From the moment you arrive, Kaiz La handles every detail of your itinerary — travel, factory visits, product inspections, and more. A dedicated <span className="text-secondary font-bold">Kaiz La Customer Success Expert</span> accompanies you throughout the journey, ensuring seamless communication, transparency, and complete confidence in your sourcing decisions.
+        </>
+      ),
+      stat: "100% On-Site Inspection Support",
     },
     {
       icon: Award,
@@ -78,17 +89,6 @@ export default function WhyChooseUs() {
       title: "Significantly Faster Delivery Times",
       description: "Our local presence in key markets and a fully integrated supply chain allow us to cut through delays and get your products to you faster.",
       stat: "Up to 40% Faster Delivery",
-    },
-    {
-      icon: UserCheck,
-      tabName: "Customer Experience Support",
-      title: "Firsthand Confidence Before You Buy",
-      description: (
-        <>
-          We invite you to China to personally experience your products before purchase. From the moment you arrive, Kaiz La handles every detail of your itinerary — travel, factory visits, product inspections, and more. A dedicated <span className="text-secondary font-bold">Kaiz La Customer Success Expert</span> accompanies you throughout the journey, ensuring seamless communication, transparency, and complete confidence in your sourcing decisions.
-        </>
-      ),
-      stat: "100% On-Site Inspection Support",
     },
     {
       icon: Brain,

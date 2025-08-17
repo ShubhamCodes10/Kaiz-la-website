@@ -144,15 +144,6 @@ export default function About() {
 
                 </ul>
               </div>
-
-              {/* Bottom Quote */}
-              <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl p-6 lg:p-8 border border-border/50 shadow-md backdrop-blur-sm">
-                <blockquote className="text-base lg:text-lg xl:text-xl text-foreground italic leading-relaxed drop-shadow-sm">
-                  "We simplify global sourcing by offering comprehensive end-to-end services that extend far beyond
-                  traditional procurement."
-                </blockquote>
-                <div className="mt-3 lg:mt-4 text-sm font-semibold text-secondary drop-shadow-sm">— Kaiz La Team</div>
-              </div>
             </motion.div>
           </div>
         </motion.div>
