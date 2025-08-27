@@ -4,7 +4,6 @@ import { motion, type Variants } from "framer-motion"
 import Image from "next/image"
 import { Linkedin, Twitter, Facebook } from "lucide-react"
 
-// Animation variants remain the same
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {

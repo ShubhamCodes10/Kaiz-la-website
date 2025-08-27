@@ -1,37 +1,44 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #080202;          /* Kaiz La Red */
-  --secondary: #CC3433;         /* Warm Orange (from gradient) */
-  --accent: #CC3433;           /* Gold (Interpreted from gradient) */
-  --background: #ededed;       /* Off-white */
-  --foreground: #333333;       /* Dark Slate (Unchanged) */
-
-  /* Minimal additional colors for UI */
-  --card: #ffffff;             /* White for cards (Unchanged) */
-  --border: #CC3433;           /* Kaiz La Red */
-  --muted: #6b7280;             /* Muted text (Unchanged) */
-
-  /* Typography */
-  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-
-  /* Border radius */
+  --primary: #080202;
+  --secondary: #CC3433;
+  --accent: #CC3433;
+  --background: #ededed;
+  --foreground: #333333;
+  --card: #ffffff;
+  --border: #CC3433;
+  --muted: #6b7280;
   --radius: 0.5rem;
+
+  /* --- Variables ADDED to support new components --- */
+  --primary-foreground: #ffffff; /* White text for black primary bg */
+  --secondary-foreground: #ffffff; /* White text for red secondary bg */
+  --muted-foreground: #6b7280; /* Same as muted for consistency */
+  --destructive: #ef4444; /* A standard bright red for delete actions */
+  --destructive-foreground: #ffffff; /* White text for destructive actions */
 }
 
 .dark {
-  --primary: #ef4444;          /* Bright Red for Dark Mode */
-  --secondary: #FB8C00;        /* Vibrant Orange for Dark Mode */
-  --accent: #fbbf24;           /* Bright Gold for Dark Mode */
-  --background: #0f172a;       /* Dark Blue (Unchanged) */
-  --foreground: #f1f5f9;       /* Light Gray (Unchanged) */
-  --card: #1e293b;             /* Dark Card (Unchanged) */
-  --border: #ef4444;           /* Bright Red for Dark Mode */
-  --muted: #94a3b8;             /* Muted text (Unchanged) */
+  --primary: #ef4444;
+  --secondary: #FB8C00;
+  --accent: #fbbf24;
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --card: #1e293b;
+  --border: #ef4444;
+  --muted: #94a3b8;
+
+  /* --- Variables ADDED to support new components (Dark Mode) --- */
+  --primary-foreground: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted-foreground: #94a3b8;
+  --destructive: #ef4444;
+  --destructive-foreground: #f1f5f9;
 }
 
 * {
-  border-color: hsl(var(--border));
+  border-color: var(--border); /* Changed from hsl() to var() for direct use */
 }
 
 body {
@@ -44,12 +51,15 @@ body {
   background-image: linear-gradient(to right, #f4b400, #F97733, #CC3433);
 }
 
-/* Essential utility classes */
+/* --- Utility classes to make new variables usable --- */
 .bg-primary { background-color: var(--primary); }
+.text-primary-foreground { color: var(--primary-foreground); }
 .bg-secondary { background-color: var(--secondary); }
+.text-secondary-foreground { color: var(--secondary-foreground); }
 .bg-accent { background-color: var(--accent); }
 .bg-background { background-color: var(--background); }
 .bg-card { background-color: var(--card); }
+.bg-destructive { background-color: var(--destructive); }
 
 .text-primary { color: var(--primary); }
 .text-secondary { color: var(--secondary); }
@@ -57,14 +67,15 @@ body {
 .text-foreground { color: var(--foreground); }
 .text-background { color: var(--background); }
 .text-muted { color: var(--muted); }
+.text-muted-foreground { color: var(--muted-foreground); }
 .text-white { color: #ffffff; }
+.text-destructive { color: var(--destructive); }
+.text-destructive-foreground { color: var(--destructive-foreground); }
 
 .border-primary { border-color: var(--primary); }
 .border-border { border-color: var(--border); }
 
-/* A subtle gradient using only shades of the primary color */
 .text-gradient-tonal {
-  /* This gradient goes from a slightly lighter red to your main primary red */
   background: linear-gradient(145deg, #E57373, var(--primary) 70%);
   -webkit-background-clip: text;
   background-clip: text;

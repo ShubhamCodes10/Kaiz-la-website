@@ -77,7 +77,7 @@ export default function Hero() {
               variants={itemVariants}
             >
               <Link
-                href="#"
+                href="/chat"
                 className="group inline-flex items-center justify-center rounded-lg bg-secondary px-6 py-3 text-base font-semibold text-white shadow-lg transition-all duration-300 ease-in-out hover:bg-secondary/90 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 focus:ring-offset-background"
               >
                 Talk to KaiExpert
