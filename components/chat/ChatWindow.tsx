@@ -40,8 +40,10 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input.trim()) return;
 
+    setIsLoading(true);
+    
     const isNewChat = !currentConversationId;
     const conversationId = currentConversationId || crypto.randomUUID();
     const userMessage: MessageType = {
@@ -52,16 +54,11 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
       createdAt: new Date(),
     };
 
-    setIsLoading(true);
-    if (isNewChat) {
-      setIsStartingNewChat(true);
-    }
-
-    const updatedMessages = [...messages, userMessage];
-    setMessages(updatedMessages);
+    setMessages([...messages, userMessage]);
     setInput("");
 
     if (isNewChat) {
+      setIsStartingNewChat(true);
       router.push(`/chat/${conversationId}`);
     }
 
@@ -69,7 +66,7 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
       const response = await fetch('/api/chat', {
         method: 'POST',
         body: JSON.stringify({
-          messages: updatedMessages,
+          messages: [...messages, userMessage],
           conversationId,
         }),
       });
@@ -91,7 +88,8 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
           setIsStartingNewChat(false);
           firstChunkReceived = true;
           setMessages([
-            ...updatedMessages,
+            ...messages,
+            userMessage,
             { id: assistantMessageId, role: 'assistant', content: '', conversationId, createdAt: assistantCreatedAt }
           ]);
         }
@@ -101,7 +99,8 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
         assistantResponse += decoder.decode(value, { stream: true });
         
         setMessages([
-          ...updatedMessages,
+          ...messages,
+          userMessage,
           { id: assistantMessageId, role: 'assistant', content: assistantResponse, conversationId, createdAt: assistantCreatedAt }
         ]);
       }
@@ -129,7 +128,7 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
   if (isStartingNewChat) {
     return <StartingChatLoader />;
   }
-
+  
   return (
     <div className="flex flex-col h-full bg-background">
       <ScrollArea className="flex-1" ref={viewportRef}>

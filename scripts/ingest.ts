@@ -1,6 +1,6 @@
 import 'dotenv/config'; 
-import { pineconeIndex } from '@/lib/pinecone';
-import { embedQuery } from '@/lib/ai';
+import { pineconeIndex } from '../lib/pinecone.js';
+import { embedQuery } from '../lib/ai/index.js';
 import fs from 'fs/promises';
 
 /**

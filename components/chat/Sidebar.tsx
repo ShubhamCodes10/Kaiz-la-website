@@ -90,19 +90,9 @@ export function AppSidebar() {
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-1 px-2 py-2">
-                  {isLoading && conversations.length === 0 ? (
+                  {isLoading ? (
                     <SidebarSkeleton />
-                  ) : conversations.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-center group-data-[collapsible=icon]:hidden">
-                      <div className="flex aspect-square size-14 items-center justify-center rounded-full bg-background border border-border/50 mb-4 shadow-sm">
-                        <MessageSquare className="size-6 text-muted-foreground" />
-                      </div>
-                      <p className="text-sm font-medium text-foreground mb-1">No chats yet</p>
-                      <p className="text-xs text-muted-foreground max-w-[180px] leading-relaxed">
-                        Start your first conversation to see it appear here
-                      </p>
-                    </div>
-                  ) : (
+                  ) : conversations && conversations.length > 0 ? (
                     conversations.map((conversation: Conversation) => {
                       const isActive = pathname === `/chat/${conversation.id}`;
                       return (
@@ -156,6 +146,16 @@ export function AppSidebar() {
                         </SidebarMenuItem>
                       );
                     })
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-12 text-center group-data-[collapsible=icon]:hidden">
+                      <div className="flex aspect-square size-14 items-center justify-center rounded-full bg-background border border-border/50 mb-4 shadow-sm">
+                        <MessageSquare className="size-6 text-muted-foreground" />
+                      </div>
+                      <p className="text-sm font-medium text-foreground mb-1">No chats yet</p>
+                      <p className="text-xs text-muted-foreground max-w-[180px] leading-relaxed">
+                        Start your first conversation to see it appear here
+                      </p>
+                    </div>
                   )}
                 </SidebarMenu>
               </SidebarGroupContent>

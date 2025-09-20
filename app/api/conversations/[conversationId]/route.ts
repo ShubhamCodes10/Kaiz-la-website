@@ -1,13 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import redis from "@/lib/redis";
+
+const CACHE_TTL = 60 * 5; 
 
 type RouteContext = {
-  params: Promise<{ conversationId: string }>;
+  params: { conversationId: string };
 };
 
 export async function GET(req: NextRequest, context: RouteContext) {
   try {
-    const { conversationId } = await context.params;
+    const { conversationId } = context.params;
 
     if (!conversationId) {
       return NextResponse.json(
@@ -15,11 +18,22 @@ export async function GET(req: NextRequest, context: RouteContext) {
         { status: 400 }
       );
     }
+    
+    const cacheKey = `messages:${conversationId}`;
+    const cachedMessages = await redis.get(cacheKey);
+
+    if (cachedMessages) {
+      return NextResponse.json(cachedMessages);
+    }
 
     const messages = await prisma.message.findMany({
       where: { conversationId: conversationId },
       orderBy: { createdAt: "asc" },
     });
+
+    if (messages) {
+        await redis.set(cacheKey, messages, { ex: CACHE_TTL });
+    }
 
     return NextResponse.json(messages);
   } catch (error) {
@@ -33,7 +47,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
 
 export async function DELETE(req: NextRequest, context: RouteContext) {
   try {
-    const { conversationId } = await context.params;
+    const { conversationId } = context.params;
 
     if (!conversationId) {
       return NextResponse.json(
@@ -41,6 +55,12 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
         { status: 404 }
       );
     }
+    
+    const cacheKey = `messages:${conversationId}`;
+    await redis.del(cacheKey);
+    
+    const allConvosCacheKey = `all-conversations`;
+    await redis.del(allConvosCacheKey);
 
     await prisma.$transaction([
       prisma.message.deleteMany({

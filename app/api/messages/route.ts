@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import redis from '@/lib/redis';
+
 
 export async function POST(req: Request) {
   try {
@@ -19,9 +21,14 @@ export async function POST(req: Request) {
         createdAt,
       },
     });
+    
+    const messagesCacheKey = `messages:${conversationId}`;
+    const allConvosCacheKey = `all-conversations`;
+
+    await redis.del(messagesCacheKey);
+    await redis.del(allConvosCacheKey);
 
     return NextResponse.json(newMessage, { status: 201 });
-
   } catch (error) {
     console.error('Error saving message:', error);
     return NextResponse.json(

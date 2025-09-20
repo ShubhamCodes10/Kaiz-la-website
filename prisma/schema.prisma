@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,14 +11,34 @@ model Conversation {
   id        String    @id @default(cuid())
   createdAt DateTime  @default(now())
   messages  Message[]
-  title     String?  
+  title     String? 
+  stage     String    @default("greeting")
+  lead      Lead?
 }
 
 model Message {
   id             String       @id @default(cuid())
   createdAt      DateTime     @default(now())
   content        String       @db.Text
-  role           String      
+  role           String
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   conversationId String
+}
+
+model Lead {
+  id               String       @id @default(cuid())
+  createdAt        DateTime     @default(now())
+  conversation     Conversation @relation(fields: [conversationId], references: [id])
+  conversationId   String       @unique
+  name             String?
+  company          String?
+  email            String?
+  phone            String?
+  productInterest  String?
+  orderVolume      String?
+  preferredRegion  String?
+  sourcingTimeline String?
+  scheduledCall    Boolean      @default(false)
+  callDate         DateTime?
+  notes            String?      @db.Text
 }
