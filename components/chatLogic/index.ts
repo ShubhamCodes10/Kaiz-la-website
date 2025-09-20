@@ -4,11 +4,11 @@ import { getLocalIntent } from './utils/intent';
 import { getTrustBuildingReply } from './utils/trustBuilding';
 import { getQualificationQuestion } from './utils/qualification';
 import { handleRAG } from './services/rag';
-import { 
-  createNewConversation, 
-  saveMessage, 
-  getConversation, 
-  updateConversationStage 
+import {
+  createNewConversation,
+  saveMessage,
+  getConversation,
+  updateConversationStage
 } from './services/database';
 import {
   processProductStage,
@@ -19,6 +19,7 @@ import {
   processScheduleStage
 } from './services/leadProcessing';
 import { readStreamResponse } from './utils/responseHandler';
+import { prisma } from '@/lib/prisma';
 
 export async function processChatRequest(messages: Message[], conversationId: string): Promise<NextResponse> {
   try {
@@ -43,16 +44,33 @@ export async function processChatRequest(messages: Message[], conversationId: st
 
     // Determine user intent
     const userIntent = await getLocalIntent(userMessage.content, conversation.stage);
-    
+
     // Save user message
     await saveMessage(userMessage.content, 'user', conversationId);
+
+    if (conversation.stage === 'completed') {
+      const lead = await prisma.lead.findUnique({
+        where: { conversationId },
+        select: { scheduledCall: true, callDate: true }
+      })
+
+      if (lead?.scheduledCall && lead.callDate) {
+        const formattedDate = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'short' }).format(lead.callDate);
+        return new NextResponse(`Perfect, I've just received the confirmation. Your meeting is booked for ${formattedDate}. We look forward to speaking with you!`);
+      }
+
+      const lowerCaseMessage = userMessage.content.toLowerCase();
+      if (lowerCaseMessage.includes('book') || lowerCaseMessage.includes('done') || lowerCaseMessage.includes('scheduled')) {
+        return new NextResponse("That's wonderful! Our team will receive the details shortly. We look forward to speaking with you. Have a great day!");
+      }
+    }
 
     // Handle general questions or completed stage
     if (userIntent === 'GENERAL_QUESTION_INTENT' || conversation.stage === 'completed') {
       const ragResponse = await handleRAG(userMessage.content);
       const nextQuestion = getQualificationQuestion(conversation.stage);
       const ragResponseText = await readStreamResponse(ragResponse);
-      
+
       return new NextResponse(`${ragResponseText}\n\n${nextQuestion}`);
     }
 
@@ -88,7 +106,7 @@ export async function processChatRequest(messages: Message[], conversationId: st
         const ragResponse = await handleRAG(userMessage.content);
         const nextQuestionDefault = getQualificationQuestion(conversation.stage);
         const ragResponseTextDefault = await readStreamResponse(ragResponse);
-        
+
         return new NextResponse(`${ragResponseTextDefault}\n\n${nextQuestionDefault}`);
     }
 
@@ -98,7 +116,7 @@ export async function processChatRequest(messages: Message[], conversationId: st
     // Add trust building reply if available
     const trustBuildingReply = await getTrustBuildingReply(userMessage.content);
     let finalReply = result.nextBotReply;
-    
+
     if (trustBuildingReply) {
       finalReply = `${trustBuildingReply}\n\n${result.nextBotReply}`;
     }

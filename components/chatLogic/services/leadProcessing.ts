@@ -55,18 +55,26 @@ export async function processContactStage(userMessage: Message, conversationId: 
 
 export async function processScheduleStage(userMessage: Message, conversationId: string): Promise<{ nextStage: string; nextBotReply: string }> {
   const wantsCall = userMessage.content.toLowerCase().includes('yes') ||
-                   userMessage.content.toLowerCase().includes('sure') ||
-                   userMessage.content.toLowerCase().includes('ok');
-                   userMessage.content.toLowerCase().includes('okay');
+                    userMessage.content.toLowerCase().includes('sure') ||
+                    userMessage.content.toLowerCase().includes('ok') ||
+                    userMessage.content.toLowerCase().includes('okay');
 
   await updateLeadData(conversationId, { scheduledCall: wantsCall });
 
   if (wantsCall) {
-    const calendlyLink = process.env.NEXT_PUBLIC_CALENDLY_LINK
+    const calendlyLink = process.env.NEXT_PUBLIC_CALENDLY_LINK;
+    
+    const replyPayload = {
+      type: 'calendly-link',
+     text: 'Great! Please use the button below to book your call. Once you are done, just type "scheduled" in this chat to confirm.',
+      url: calendlyLink
+    };
+
     return {
       nextStage: 'completed',
-      nextBotReply: `Great! You can schedule a call with our team using this link: ${calendlyLink}. Once you've booked a time, I'll be notified. I'm here if you have any other questions.`
+      nextBotReply: JSON.stringify(replyPayload) 
     };
+    
   } else {
     return {
       nextStage: 'completed',
