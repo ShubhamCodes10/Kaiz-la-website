@@ -57,13 +57,15 @@ export async function processScheduleStage(userMessage: Message, conversationId:
   const wantsCall = userMessage.content.toLowerCase().includes('yes') ||
                    userMessage.content.toLowerCase().includes('sure') ||
                    userMessage.content.toLowerCase().includes('ok');
+                   userMessage.content.toLowerCase().includes('okay');
 
   await updateLeadData(conversationId, { scheduledCall: wantsCall });
 
   if (wantsCall) {
+    const calendlyLink = process.env.NEXT_PUBLIC_CALENDLY_LINK
     return {
       nextStage: 'completed',
-      nextBotReply: "Perfect! Someone from our team will reach out to you within 24 hours to schedule a call. In the meantime, feel free to ask me any questions about our sourcing services."
+      nextBotReply: `Great! You can schedule a call with our team using this link: ${calendlyLink}. Once you've booked a time, I'll be notified. I'm here if you have any other questions.`
     };
   } else {
     return {
