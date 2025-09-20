@@ -2,15 +2,15 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import redis from "@/lib/redis";
 
-const CACHE_TTL = 60 * 5; 
+const CACHE_TTL = 60 * 5;
 
 type RouteContext = {
-  params: { conversationId: string };
+  params: Promise<{ conversationId: string }>;
 };
 
 export async function GET(req: NextRequest, context: RouteContext) {
   try {
-    const { conversationId } = context.params;
+    const { conversationId } = await context.params;
 
     if (!conversationId) {
       return NextResponse.json(
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
         { status: 400 }
       );
     }
-    
+
     const cacheKey = `messages:${conversationId}`;
     const cachedMessages = await redis.get(cacheKey);
 
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
     });
 
     if (messages) {
-        await redis.set(cacheKey, messages, { ex: CACHE_TTL });
+      await redis.set(cacheKey, messages, { ex: CACHE_TTL });
     }
 
     return NextResponse.json(messages);
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
 
 export async function DELETE(req: NextRequest, context: RouteContext) {
   try {
-    const { conversationId } = context.params;
+    const { conversationId } = await context.params;
 
     if (!conversationId) {
       return NextResponse.json(
@@ -55,10 +55,10 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
         { status: 404 }
       );
     }
-    
+
     const cacheKey = `messages:${conversationId}`;
     await redis.del(cacheKey);
-    
+
     const allConvosCacheKey = `all-conversations`;
     await redis.del(allConvosCacheKey);
 
@@ -66,7 +66,7 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
       prisma.message.deleteMany({
         where: { conversationId: conversationId },
       }),
-      prisma.conversation.delete({ 
+      prisma.conversation.delete({
         where: { id: conversationId },
       }),
     ]);
