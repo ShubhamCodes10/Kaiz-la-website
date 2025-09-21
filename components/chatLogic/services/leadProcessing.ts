@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server';
 import type { Message } from '@/types/chat';
 import { updateLeadData } from './database';
+import { sendNewLeadNotification } from './notifications';
+import { prisma } from '@/lib/prisma';
 
 export async function processProductStage(userMessage: Message, conversationId: string): Promise<{ nextStage: string; nextBotReply: string }> {
   await updateLeadData(conversationId, { productInterest: userMessage.content });
@@ -46,6 +47,14 @@ export async function processContactStage(userMessage: Message, conversationId: 
     phone: phoneMatch ? phoneMatch[0].trim() : undefined,
     company: companyMatch ? companyMatch[1].trim() : undefined,
   });
+
+  const fullLead = await prisma.lead.findUnique({
+    where: {conversationId}
+  });
+
+  if(fullLead){
+     sendNewLeadNotification(fullLead);
+  }
 
   return {
     nextStage: 'schedule',
