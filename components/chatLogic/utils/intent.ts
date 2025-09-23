@@ -1,6 +1,9 @@
-
 export async function getLocalIntent(userMessageContent: string, conversationStage: string): Promise<string> {
   const lowerCaseMessage = userMessageContent.toLowerCase().trim();
+
+  if (lowerCaseMessage.includes('just exploring')) {
+    return 'EXPLORING_INTENT';
+  }
 
   switch (conversationStage) {
     case 'product':

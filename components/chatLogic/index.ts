@@ -31,7 +31,7 @@ export async function processChatRequest(messages: Message[], conversationId: st
       await saveMessage(userMessage.content, 'user', conversationId);
       const lowerCaseMessage = userMessage.content.toLowerCase();
 
-      if (lowerCaseMessage.includes('services') || lowerCaseMessage.includes('business') || lowerCaseMessage.includes('expertise') || lowerCaseMessage.includes('different')) {
+      if (lowerCaseMessage.includes('chat') || lowerCaseMessage.includes('schedule a call') || lowerCaseMessage.includes('explore sourcing solutions')) {
         const greeting = "Hello and welcome to Kaiz La! I'm KaiExpert, your virtual sourcing assistant. That's a great question.\n\n";
         const ragResponse = await handleRAG(userMessage.content, true);
         const ragText = await readStreamResponse(ragResponse);
@@ -78,6 +78,10 @@ export async function processChatRequest(messages: Message[], conversationId: st
     }
 
     const userIntent = await getLocalIntent(userMessage.content, conversation.stage);
+
+    if (userIntent === 'EXPLORING_INTENT') {
+      return new NextResponse("No problem! I can share how Kaiz La works and connect you with our team when you’re ready.");
+    }
 
     if (userIntent === 'GENERAL_QUESTION_INTENT') {
       const ragResponse = await handleRAG(userMessage.content);
