@@ -1,5 +1,5 @@
 import { type Message } from '@/store/chatStore';
-import { Bot, User } from 'lucide-react';
+import { Bot, User, Calendar } from 'lucide-react';
 
 interface MessageBubbleProps {
   message: Message;
@@ -7,17 +7,18 @@ interface MessageBubbleProps {
 
 function CalendlyButton({ payload }: { payload: any }) {
   return (
-    <>
-      <p className="text-sm mb-3">{payload.text}</p>
+    <div className="space-y-4">
+      <p className="text-sm text-card-foreground/90 leading-relaxed">{payload.text}</p>
       <a
         href={payload.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg text-sm text-center"
+        className="group inline-flex items-center gap-3 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold py-3 px-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-150 text-sm"
       >
+        <Calendar className="w-4 h-4" />
         Schedule Your Call
       </a>
-    </>
+    </div>
   );
 }
 
@@ -34,40 +35,49 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         isCalendlyLink = true;
         content = <CalendlyButton payload={parsedContent} />;
       } else {
-        content = <p className="text-sm whitespace-pre-wrap">{message.content}</p>;
+        content = <p className="text-sm text-card-foreground leading-relaxed whitespace-pre-wrap">{message.content}</p>;
       }
     } catch (error) {
-      content = <p className="text-sm whitespace-pre-wrap">{message.content}</p>;
+      content = <p className="text-sm text-card-foreground leading-relaxed whitespace-pre-wrap">{message.content}</p>;
     }
   } else {
-    content = <p className="text-sm whitespace-pre-wrap">{message.content}</p>;
+    content = <p className="text-sm text-primary-foreground leading-relaxed whitespace-pre-wrap">{message.content}</p>;
   }
 
   return (
-    <div className={`flex items-start gap-3 mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}>
+    <div className={`flex items-start gap-4 ${isUser ? 'justify-end' : 'justify-start'}`}>
       {!isUser && (
-        <div className="flex-shrink-0 size-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center">
-          <Bot size={20} />
+        <div className="flex-shrink-0 size-10 rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center shadow-md">
+          <Bot size={18} />
         </div>
       )}
 
       <div
-        className={`p-3 rounded-lg max-w-lg relative ${
+        className={`group relative max-w-2xl ${
           isUser
-            ? 'bg-primary text-primary-foreground'
-            : 'bg-card text-card-foreground border border-border'
-        }`}
+            ? 'bg-primary text-primary-foreground shadow-sm hover:shadow-md'
+            : 'bg-card text-card-foreground shadow-sm hover:shadow-md'
+        } rounded-2xl p-4 transition-shadow duration-150`}
       >
         {content}
 
-        <p className={`text-xs mt-1.5 opacity-70 ${isUser ? 'text-right' : 'text-left'}`}>
+        <div className={`text-xs mt-3 opacity-60 ${isUser ? 'text-right' : 'text-left'}`}>
           {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-        </p>
+        </div>
+
+        {/* Floating tail effect */}
+        <div
+          className={`absolute top-4 w-3 h-3 rotate-45 ${
+            isUser
+              ? 'bg-primary -right-1.5'
+              : 'bg-card -left-1.5'
+          } shadow-md`}
+        />
       </div>
 
       {isUser && (
-        <div className="flex-shrink-0 size-8 rounded-full bg-foreground text-background flex items-center justify-center">
-          <User size={20} />
+        <div className="flex-shrink-0 size-10 rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center shadow-md">
+          <User size={18} />
         </div>
       )}
     </div>

@@ -3,8 +3,9 @@ import { generateChatResponse } from '@/lib/ai';
 import { pineconeIndex } from '@/lib/pinecone';
 import { embedWithRetry } from './embedding';
 import { MIN_RAG_SCORE } from '../utils/constants';
+import { readStreamResponse } from '../utils/responseHandler';
 
-export async function handleRAG(userMessageContent: string): Promise<NextResponse> {
+export async function handleRAG(userMessageContent: string, addFollowUpQuestion: boolean = false): Promise<NextResponse> {
   try {
     const vector = await embedWithRetry(userMessageContent);
 
@@ -41,7 +42,15 @@ export async function handleRAG(userMessageContent: string): Promise<NextRespons
     ---
     `;
     const responseStream = await generateChatResponse([{ role: 'user', content: userMessageContent }], systemPrompt);
-    return new NextResponse(responseStream.body);
+    const responseText = await readStreamResponse(new NextResponse(responseStream.body));
+    
+    let finalResponse = responseText;
+    if (addFollowUpQuestion) {
+      const nextQuestion = "To help find the best options, could you tell me what product you are looking to source?";
+      finalResponse += `\n\n${nextQuestion}`;
+    }
+
+    return new NextResponse(finalResponse);
   } catch (error) {
     console.error('RAG handling failed:', error);
     const fallbackText = "I apologize, but I'm experiencing some technical difficulties. Please feel free to ask me any other questions, or we can continue with the sourcing questions.";

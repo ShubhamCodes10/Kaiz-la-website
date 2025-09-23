@@ -29,6 +29,15 @@ export async function processChatRequest(messages: Message[], conversationId: st
     if (isNewConversation) {
       await createNewConversation(conversationId, userMessage);
       await saveMessage(userMessage.content, 'user', conversationId);
+      const lowerCaseMessage = userMessage.content.toLowerCase();
+
+      if (lowerCaseMessage.includes('services') || lowerCaseMessage.includes('business') || lowerCaseMessage.includes('expertise') || lowerCaseMessage.includes('different')) {
+        const greeting = "Hello and welcome to Kaiz La! I'm KaiExpert, your virtual sourcing assistant. That's a great question.\n\n";
+        const ragResponse = await handleRAG(userMessage.content, true);
+        const ragText = await readStreamResponse(ragResponse);
+        return new NextResponse(greeting + ragText);
+      }
+      
       const responseText = "Hi there! I'm here to help you get started with your sourcing needs. To begin, could you tell me what product you are looking to source?";
       return new NextResponse(responseText);
     }

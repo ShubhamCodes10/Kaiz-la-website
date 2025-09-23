@@ -1,9 +1,9 @@
 'use client';
 
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from '@/components/chat/Sidebar';
 import React, { ReactNode } from 'react';
-import { MessageSquare } from "lucide-react";
+import { Plus } from "lucide-react";
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function ChatLayout({
   children,
@@ -11,43 +11,42 @@ export default function ChatLayout({
   children: ReactNode;
 }) {
   return (
-    <SidebarProvider 
-      style={{
-        ['--sidebar-width' as string]: "20rem", // 320px - increased from default
-        ['--sidebar-width-mobile' as string]: "18rem" // 288px for mobile
-      }} 
-      defaultOpen={true}
-    >
-      <div className="flex h-screen w-full bg-background">
-        <AppSidebar />
-        
-        <main className="flex flex-1 flex-col h-full min-w-0">
-          <header className="flex h-18 shrink-0 items-center gap-4 px-4 sm:px-6 border-b border-border/50 bg-card shadow-sm">
-            <SidebarTrigger className="h-8 w-8 cursor-pointer hover:bg-secondary/10 transition-colors duration-200 rounded-md flex items-center justify-center" />
-            
-            <div className="flex items-center gap-3 flex-1 min-w-0">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-secondary text-secondary-foreground shadow-sm">
-                <MessageSquare className="size-4" />
-              </div>
-              <div className="flex flex-col gap-0.5 leading-none">
-                <h1 className="text-base font-semibold text-foreground">Kaiz La Chat</h1>
-                <span className="text-xs text-muted-foreground hidden sm:block">AI Assistant</span>
-              </div>
-            </div>
-
-            {/* Optional: Add header actions space */}
-            <div className="flex items-center gap-2">
-            </div>
-          </header>
-
-          {/* Main content area with proper scrolling */}
-          <div className="flex-1 overflow-hidden bg-background">
-            <div className="h-full overflow-y-auto">
-              {children}
-            </div>
+    <div className="flex h-screen w-full bg-background">
+      <main className="flex flex-1 flex-col h-full min-w-0">
+        <header className="flex h-16 shrink-0 items-center gap-4 px-4 sm:px-6 bg-background/95 backdrop-blur-sm shadow-sm">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <Link href="/" className="flex items-center group" aria-label="Kaiz La Home">
+              <Image
+                src="/logo.png"
+                alt="Kaiz La Logo"
+                width={120}
+                height={60}
+                className="transition-transform duration-300 group-hover:scale-105 dark:filter dark:[filter:brightness(0)_invert(35%)_sepia(95%)_saturate(5000%)_hue-rotate(325deg)]"
+                priority
+              />
+            </Link>
+            {/* <div className="flex flex-col gap-0.5 leading-none ml-2">
+              <h1 className="text-base font-semibold text-foreground">KaiExpert</h1>
+              <span className="text-xs text-muted-foreground hidden sm:block">AI Sourcing Assistant</span>
+            </div> */}
           </div>
-        </main>
-      </div>
-    </SidebarProvider>
+
+          <div className="flex items-center gap-2">
+            <Link href="/chat">
+              <button className="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg transition-all duration-150 shadow-sm hover:shadow-md">
+                <Plus className="size-4" />
+                <span className="hidden sm:inline text-sm font-medium">New Chat</span>
+              </button>
+            </Link>
+          </div>
+        </header>
+
+        <div className="flex-1 overflow-hidden">
+          <div className="h-full overflow-y-auto pb-4">
+            {children}
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }

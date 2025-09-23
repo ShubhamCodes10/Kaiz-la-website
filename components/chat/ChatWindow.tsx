@@ -30,13 +30,20 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
   }, [currentConversationId, setMessages]);
 
   useEffect(() => {
-    if (viewportRef.current) {
-      viewportRef.current.scrollTo({
-        top: viewportRef.current.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
-  }, [messages]);
+    const scrollToBottom = () => {
+      if (viewportRef.current) {
+        const viewport = viewportRef.current.querySelector('[data-radix-scroll-area-viewport]');
+        if (viewport) {
+          viewport.scrollTop = viewport.scrollHeight;
+        }
+      }
+    };
+
+    scrollToBottom();
+    const timeoutId = setTimeout(scrollToBottom, 100);
+    
+    return () => clearTimeout(timeoutId);
+  }, [messages, isLoading]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -130,43 +137,83 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
   }
   
   return (
-    <div className="flex flex-col h-full bg-background">
+    <div className="flex flex-col h-full">
       <ScrollArea className="flex-1" ref={viewportRef}>
-        <div className="max-w-4xl mx-auto py-6 px-4">
+        <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6">
           {messages.length === 0 && !isLoading && !currentConversationId ? (
-            <div className="flex flex-col items-center justify-center text-center min-h-[calc(100vh-14rem)]">
-              <div className="mb-4 flex aspect-square size-20 items-center justify-center rounded-full bg-secondary text-white">
-                <Bot size={48} />
+            <div className="flex flex-col items-center justify-center text-center min-h-[calc(100vh-28rem)] sm:min-h-[calc(100vh-24rem)] md:min-h-[calc(100vh-22rem)]">
+              <div className="mb-4 flex aspect-square size-20 sm:size-24 items-center justify-center rounded-2xl bg-secondary text-secondary-foreground shadow-lg">
+                <Bot className="size-10 sm:size-12" />
               </div>
-              <h1 className="text-5xl font-bold text-foreground tracking-tight">Kaiz La Chat</h1>
-              <p className="text-muted-foreground mt-3 text-lg">Ask anything to begin.</p>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-secondary tracking-tight mb-3">Kai <span className='text-primary'>Expert</span></h1>
+              <p className="text-base sm:text-lg text-muted-foreground max-w-sm sm:max-w-md mb-4 px-4">Your intelligent AI assistant is ready to help. Ask anything to begin our conversation.</p>
             </div>
           ) : (
-            messages.map((message: any) => (
-              <MessageBubble key={message.id} message={message} />
-            ))
+            <div className="space-y-6">
+              {messages.map((message: any) => (
+                <MessageBubble key={message.id} message={message} />
+              ))}
+              {isLoading && <TypingIndicator />}
+            </div>
           )}
-          {isLoading && <TypingIndicator />}
         </div>
       </ScrollArea>
-      <div className="border-t border-border p-4 bg-card">
-        <div className="max-w-4xl mx-auto">
-          <form onSubmit={handleSubmit} className="flex items-center gap-3">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
-              disabled={isLoading}
-              className="flex-1 bg-background border-border focus:border-primary h-12 px-4"
-            />
-            <Button
-              type="submit"
-              disabled={isLoading || !input.trim()}
-              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 h-12 w-12"
-              size="icon"
+
+      {messages.length === 0 && !isLoading && !currentConversationId && (
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-6">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center">
+            <button
+              onClick={() => setInput("What services do you offer?")}
+              className="px-4 py-3 bg-card hover:bg-card/80 text-card-foreground rounded-xl shadow-sm hover:shadow-md transition-all duration-150 text-sm font-medium"
             >
-              <Send className="w-5 h-5" />
-            </Button>
+              What services do you offer?
+            </button>
+            <button
+              onClick={() => setInput("How can you help me with my business?")}
+              className="px-4 py-3 bg-card hover:bg-card/80 text-card-foreground rounded-xl shadow-sm hover:shadow-md transition-all duration-150 text-sm font-medium"
+            >
+              How can you help me with my business?
+            </button>
+            <button
+              onClick={() => setInput("Tell me about your expertise")}
+              className="px-4 py-3 bg-card hover:bg-card/80 text-card-foreground rounded-xl shadow-sm hover:shadow-md transition-all duration-150 text-sm font-medium"
+            >
+              Tell me about your expertise
+            </button>
+            <button
+              onClick={() => setInput("What makes you different?")}
+              className="px-4 py-3 bg-card hover:bg-card/80 text-card-foreground rounded-xl shadow-sm hover:shadow-md transition-all duration-150 text-sm font-medium"
+            >
+              What makes you different?
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="bg-background/95 backdrop-blur-sm shadow-lg">
+        <div className="max-w-4xl mx-auto p-4 sm:p-6">
+          <form onSubmit={handleSubmit} className="relative">
+            <div className="flex items-center gap-3 p-2 bg-card rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-150">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type your message here..."
+                disabled={isLoading}
+                className="flex-1 bg-transparent border-none focus:ring-0 focus-visible:ring-0 h-12 px-4 text-base placeholder:text-muted-foreground"
+              />
+              <Button
+                type="submit"
+                disabled={isLoading || !input.trim()}
+                className={`h-12 w-12 rounded-xl transition-all duration-150 shadow-sm ${
+                  input.trim() && !isLoading
+                    ? 'bg-secondary hover:bg-secondary/90 text-secondary-foreground hover:shadow-md'
+                    : 'bg-secondary/50 text-secondary-foreground/50'
+                }`}
+                size="icon"
+              >
+                <Send className="w-5 h-5" />
+              </Button>
+            </div>
           </form>
         </div>
       </div>
