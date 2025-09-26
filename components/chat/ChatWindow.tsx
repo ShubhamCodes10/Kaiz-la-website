@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useChatStore, type Message as MessageType } from '@/store/chatStore';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageBubble } from "./MessageBubble";
 import { Bot, Send, MessageSquare, Calendar, Search } from "lucide-react";
 import { TypingIndicator } from './TypingIndicator';
@@ -20,16 +19,14 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
   const { messages, setMessages, fetchMessages } = useChatStore();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const viewportRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [isStartingNewChat, setIsStartingNewChat] = useState(false);
 
   useEffect(() => {
     const handleSetInput = (event: CustomEvent<string>) => {
       setInput(event.detail);
     };
-
     document.addEventListener('set-chat-input', handleSetInput as EventListener);
-
     return () => {
       document.removeEventListener('set-chat-input', handleSetInput as EventListener);
     };
@@ -42,17 +39,9 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
   }, [currentConversationId, setMessages]);
 
   useEffect(() => {
-    const scrollToBottom = () => {
-      if (viewportRef.current) {
-        const viewport = viewportRef.current.querySelector('[data-radix-scroll-area-viewport]');
-        if (viewport) {
-          viewport.scrollTop = viewport.scrollHeight;
-        }
-      }
-    };
-    scrollToBottom();
-    const timeoutId = setTimeout(scrollToBottom, 100);
-    return () => clearTimeout(timeoutId);
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+    }
   }, [messages, isLoading]);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -133,7 +122,7 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
 
   return (
     <div className="flex flex-col h-full">
-      <ScrollArea className="flex-1" ref={viewportRef}>
+      <div className="flex-1 overflow-y-auto" ref={scrollAreaRef}>
         <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6">
           {messages.length === 0 && !isLoading && !currentConversationId ? (
             <div className="flex flex-col items-center justify-center text-center min-h-[calc(100vh-28rem)] sm:min-h-[calc(100vh-24rem)] md:min-h-[calc(100vh-22rem)]">
@@ -155,7 +144,7 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
             </div>
           )}
         </div>
-      </ScrollArea>
+      </div>
 
       {messages.length === 0 && !isLoading && !currentConversationId && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-6">
