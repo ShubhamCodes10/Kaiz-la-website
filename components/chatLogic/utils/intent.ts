@@ -5,29 +5,31 @@ export async function getLocalIntent(userMessageContent: string, conversationSta
     return 'EXPLORING_INTENT';
   }
 
+  const isQuestion = lowerCaseMessage.includes('what') || 
+                     lowerCaseMessage.includes('how') || 
+                     lowerCaseMessage.includes('where') || 
+                     lowerCaseMessage.includes('who') || 
+                     lowerCaseMessage.includes('why') || 
+                     lowerCaseMessage.includes('when') ||
+                     lowerCaseMessage.includes('can you') ||
+                     lowerCaseMessage.includes('are you') ||
+                     lowerCaseMessage.endsWith('?');
+
   switch (conversationStage) {
     case 'product':
-      if (lowerCaseMessage.length > 2 && !lowerCaseMessage.includes('?') && !lowerCaseMessage.includes('what')) {
+    case 'region':
+    case 'timeline':
+      if (lowerCaseMessage.length > 1 && !isQuestion) {
         return 'QUALIFICATION_INTENT';
       }
       break;
     case 'volume':
-      if (lowerCaseMessage.match(/(\d+k|\d{1,3}(,\d{3})*|\d{1,}\s*k)/i) || lowerCaseMessage.includes('hundred') || lowerCaseMessage.includes('thousand') || lowerCaseMessage.includes('million')) {
-        return 'QUALIFICATION_INTENT';
-      }
-      break;
-    case 'region':
-      if (lowerCaseMessage.includes('asia') || lowerCaseMessage.includes('europe') || lowerCaseMessage.includes('north america') || lowerCaseMessage.includes('china') || lowerCaseMessage.includes('india')) {
-        return 'QUALIFICATION_INTENT';
-      }
-      break;
-    case 'timeline':
-      if (lowerCaseMessage.includes('quick') || lowerCaseMessage.includes('long-term') || lowerCaseMessage.includes('immediate') || lowerCaseMessage.includes('fast')) {
+      if (lowerCaseMessage.match(/(\d+k|\d{1,3}(,\d{3})*|\d+|\d{1,}\s*k)/i) || lowerCaseMessage.includes('hundred') || lowerCaseMessage.includes('thousand') || lowerCaseMessage.includes('million')) {
         return 'QUALIFICATION_INTENT';
       }
       break;
     case 'contact':
-      if (lowerCaseMessage.includes('@') || lowerCaseMessage.match(/\b\d{10,}\b/)) {
+      if (lowerCaseMessage.includes('@') || lowerCaseMessage.match(/\b\d{7,}\b/)) {
         return 'QUALIFICATION_INTENT';
       }
       break;
@@ -38,7 +40,7 @@ export async function getLocalIntent(userMessageContent: string, conversationSta
       break;
   }
   
-  if (lowerCaseMessage.includes('what') || lowerCaseMessage.includes('how') || lowerCaseMessage.includes('where') || lowerCaseMessage.includes('who') || lowerCaseMessage.includes('why') || lowerCaseMessage.includes('when') || lowerCaseMessage.includes('can you') || lowerCaseMessage.includes('are you')) {
+  if (isQuestion) {
     return 'GENERAL_QUESTION_INTENT';
   }
 

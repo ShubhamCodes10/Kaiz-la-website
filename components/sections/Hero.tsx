@@ -72,32 +72,24 @@ export default function Hero() {
               </p>
             </motion.div>
 
-            <motion.div 
-              className="flex flex-wrap items-center justify-center gap-4 pt-4"
+            <motion.div
+              className="flex flex-wrap items-center justify-center gap-6 pt-8 pb-4"
               variants={itemVariants}
             >
               <Link
                 href="/chat"
-                className="group inline-flex items-center justify-center rounded-lg bg-secondary px-6 py-3 text-base font-semibold text-white shadow-lg transition-all duration-300 ease-in-out hover:bg-secondary/90 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 focus:ring-offset-background"
+                className="group inline-flex items-center justify-center rounded-lg bg-secondary px-8 py-4 text-lg font-bold text-white shadow-xl transition-all duration-300 ease-in-out hover:bg-secondary/90 hover:shadow-2xl hover:scale-110 focus:outline-none focus:ring-4 focus:ring-secondary focus:ring-offset-4 focus:ring-offset-background border-2 border-transparent hover:border-white/20"
               >
                 Talk to KaiExpert
-                <ArrowRight className="ml-2 h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-              
-              <Link
-                href="#services"
-                className="group inline-flex items-center justify-center rounded-lg bg-secondary px-6 py-3 text-base font-semibold text-white shadow-lg transition-all duration-300 ease-in-out hover:bg-secondary/90 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 focus:ring-offset-background"
-              >
-                The Kaiz La Advantage
-                <ArrowRight className="ml-2 h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight className="ml-3 h-5 w-5 shrink-0 transition-transform duration-300 group-hover:translate-x-2" />
               </Link>
 
               <Link
-                href="#services"
-                className="group inline-flex items-center justify-center rounded-lg bg-secondary px-6 py-3 text-base font-semibold text-white shadow-lg transition-all duration-300 ease-in-out hover:bg-secondary/90 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 focus:ring-offset-background"
+                href="#why-choose-us"
+                className="group inline-flex items-center justify-center rounded-lg bg-secondary px-8 py-4 text-lg font-bold text-white shadow-xl transition-all duration-300 ease-in-out hover:bg-secondary/90 hover:shadow-2xl hover:scale-110 focus:outline-none focus:ring-4 focus:ring-secondary focus:ring-offset-4 focus:ring-offset-background border-2 border-transparent hover:border-white/20"
               >
-                Get an instant quote
-                <ArrowRight className="ml-2 h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
+                The Kaiz La Advantage
+                <ArrowRight className="ml-3 h-5 w-5 shrink-0 transition-transform duration-300 group-hover:translate-x-2" />
               </Link>
             </motion.div>
 

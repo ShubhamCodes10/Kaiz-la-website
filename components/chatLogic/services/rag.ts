@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { generateChatResponse } from '@/lib/ai';
 import { pineconeIndex } from '@/lib/pinecone';
 import { embedWithRetry } from './embedding';
-import { MIN_RAG_SCORE } from '../utils/constants';
 import { readStreamResponse } from '../utils/responseHandler';
 
 export async function handleRAG(userMessageContent: string, addFollowUpQuestion: boolean = false): Promise<NextResponse> {
@@ -19,28 +18,29 @@ export async function handleRAG(userMessageContent: string, addFollowUpQuestion:
       includeMetadata: true,
     });
 
-    const filteredMatches = queryResponse.matches.filter(
-      (match) => match.score && match.score > MIN_RAG_SCORE
-    );
-
-    const context = filteredMatches.map((m) => m.metadata?.text).join('\n\n');
+    const context = queryResponse.matches.map((m) => m.metadata?.text).join('\n\n---\n\n');
 
     const systemPrompt = `
-    You are an expert assistant. Your user is asking a question.
-    Use the following provided context to answer the user's question as accurately as possible.
-    The context is a set of text chunks retrieved from a knowledge base.
-    
-    RULES:
-    1. If the context has the answer, you MUST use the information from the context.
-    2. Do not make up information that is not present in the context.
-    3. If the context does not contain the answer, you MUST state "I'm sorry, I don't have that information in my knowledge base."
-    4. Do not mention the word "context" in your answer. Just provide the answer directly.
+    You are an expert assistant for Kaiz La. A user is asking a question.
+    You will be provided with a few chunks of text from a knowledge base. Your task is to find the single chunk that contains the most relevant information to answer the user's question.
 
-    CONTEXT:
+    RULES:
+    1. First, carefully read the user's question and all the provided text chunks.
+    2. Identify the single best chunk that directly answers the question.
+    3. If you find a relevant chunk, use ONLY the information from that chunk to write a concise and accurate answer.
+    4. If NONE of the chunks contain a relevant answer, you MUST respond with the exact phrase: "I'm sorry, I't have that information in my knowledge base."
+    5. Do not make up information or use knowledge from outside the provided chunks.
+    6. Do not mention the words "context" or "chunks" in your final answer.
+
+    USER QUESTION:
+    "${userMessageContent}"
+
+    PROVIDED TEXT CHUNKS:
     ---
     ${context || 'No relevant context found.'}
     ---
     `;
+    
     const responseStream = await generateChatResponse([{ role: 'user', content: userMessageContent }], systemPrompt);
     const responseText = await readStreamResponse(new NextResponse(responseStream.body));
     

@@ -129,21 +129,7 @@ export function Header() {
 
             <div className="hidden lg:flex items-center space-x-3 xl:space-x-4">
               <Link
-                href="#"
-                className="
-                  px-4 py-2 xl:px-5 xl:py-2.5
-                  text-primary border border-primary rounded-lg 
-                  hover:bg-primary hover:text-white 
-                  transition-all duration-200 font-medium
-                  text-sm xl:text-base
-                  focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-                  bg-card/80 backdrop-blur-sm
-                "
-              >
-                Get Quote
-              </Link>
-              <Link
-                href="#"
+                href="/chat"
                 className="
                   px-4 py-2 xl:px-5 xl:py-2.5
                   bg-secondary text-white rounded-lg 

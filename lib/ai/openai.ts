@@ -6,10 +6,11 @@ const openai = createOpenAI({
 });
 
 export async function embedQuery(text: string): Promise<number[]> {
-  const { embedding } = await embed({
-    model: openai.embedding('text-embedding-3-small'), 
+  const { embedding, usage } = await embed({
+    model: openai.embedding('text-embedding-3-small'),
     value: text,
   });
+  console.log('Embedding Token Usage:', usage);
   return embedding;
 }
 
@@ -18,7 +19,13 @@ export async function generateChatResponse(messages: any[], systemPrompt: string
     model: openai('gpt-4o'),
     system: systemPrompt,
     messages: messages,
+    maxOutputTokens: 512,
   });
+  
+  result.usage.then(usage => {
+    console.log('Chat Generation Token Usage:', usage);
+  });
+
   return result.toTextStreamResponse();
 }
 
@@ -29,11 +36,11 @@ export async function generateTitle(text: string): Promise<string> {
   
   TITLE:`;
 
-  const { text: title } = await generateText({
-    model: openai('gpt-3.5-turbo'), 
+  const { text: title, usage } = await generateText({
+    model: openai('gpt-3.5-turbo'),
     prompt: prompt,
-    maxOutputTokens: 15,
+    maxOutputTokens: 20,
   });
-
+  console.log('Title Generation Token Usage:', usage);
   return title.trim().replace(/"/g, '');
 }

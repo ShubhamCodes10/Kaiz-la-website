@@ -30,7 +30,7 @@ export async function processRegionStage(userMessage: Message, conversationId:st
 export async function processTimelineStage(userMessage: Message, conversationId: string): Promise<{ nextStage: string; nextBotReply: string }> {
   await updateLeadData(conversationId, { sourcingTimeline: userMessage.content });
   const confidentialityMessage = "Your details are kept 100% confidential under our NDA-backed process.";
-  const nextQuestion = "Great. I have all the sourcing details. Now, To connect you with the right Kaiz La executive, please share your name, company, and preferred contact (email or phone)";
+  const nextQuestion = "Great. I have all the sourcing details. Now, to connect you with the right Kaiz La executive, please share your name, company, and preferred contact (email or phone).\n\n(e.g., John Doe, Acme Inc, john@acme.com, 555-123-4567)";
   return {
     nextStage: 'contact',
     nextBotReply: `${confidentialityMessage}\n\n${nextQuestion}`
@@ -48,7 +48,6 @@ export async function processContactStage(userMessage: Message, conversationId: 
 
   const emailRegex = /\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b/i;
   const phoneRegex = /\b\d{7,}\b/;
-
   const remainingParts: string[] = [];
 
   parts.forEach(part => {
@@ -69,11 +68,9 @@ export async function processContactStage(userMessage: Message, conversationId: 
   }
 
   await updateLeadData(conversationId, { name, company, email, phone });
-
   const fullLead = await prisma.lead.findUnique({
     where: { conversationId }
   });
-
   if (fullLead) {
     sendNewLeadNotification(fullLead);
   }
@@ -101,18 +98,15 @@ export async function processScheduleStage(userMessage: Message, conversationId:
 
   if (wantsCall) {
     const calendlyLink = process.env.NEXT_PUBLIC_CALENDLY_LINK;
-    
     const replyPayload = {
       type: 'calendly-link',
       text: 'Great! Please use the button below to book your call. Once you are done, just type "scheduled" in this chat to confirm.',
       url: calendlyLink
     };
-
     return {
       nextStage: 'completed',
       nextBotReply: JSON.stringify(replyPayload)
     };
-    
   } else {
     return {
       nextStage: 'completed',

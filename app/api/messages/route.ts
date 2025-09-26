@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import redis from '@/lib/redis';
 
 
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -11,6 +12,15 @@ export async function POST(req: Request) {
     if (!id || !content || !role || !conversationId) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
+
+    await prisma.conversation.upsert({
+      where: { id: conversationId },
+      update: {}, 
+      create: {   
+        id: conversationId,
+        title: content.substring(0, 25), 
+      }
+    });
 
     const newMessage = await prisma.message.create({
       data: {

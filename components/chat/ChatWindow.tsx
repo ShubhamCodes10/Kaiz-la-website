@@ -24,6 +24,18 @@ export function ChatWindow({ conversationId: currentConversationId }: ChatWindow
   const [isStartingNewChat, setIsStartingNewChat] = useState(false);
 
   useEffect(() => {
+    const handleSetInput = (event: CustomEvent<string>) => {
+      setInput(event.detail);
+    };
+
+    document.addEventListener('set-chat-input', handleSetInput as EventListener);
+
+    return () => {
+      document.removeEventListener('set-chat-input', handleSetInput as EventListener);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!currentConversationId) {
       setMessages([]);
     }

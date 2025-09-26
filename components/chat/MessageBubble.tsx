@@ -6,6 +6,10 @@ interface MessageBubbleProps {
 }
 
 function CalendlyButton({ payload }: { payload: any }) {
+  const handleSuggestedReply = (text: string) => {
+    document.dispatchEvent(new CustomEvent('set-chat-input', { detail: text }));
+  };
+
   return (
     <div className="space-y-4">
       <p className="text-sm text-card-foreground/90 leading-relaxed">{payload.text}</p>
@@ -18,21 +22,22 @@ function CalendlyButton({ payload }: { payload: any }) {
         <Calendar className="w-4 h-4" />
         Schedule Your Call
       </a>
+      <div className="flex items-center gap-2 pt-2 border-t border-border/50">
+        <span className="text-md text-muted-foreground">Finished scheduling? Click here:</span>
+        <button onClick={() => handleSuggestedReply('Scheduled')} className="text-md font-semibold text-primary text-secondary cursor-pointer hover:underline">Scheduled</button>
+      </div>
     </div>
   );
 }
 
 export function MessageBubble({ message }: MessageBubbleProps) {
   const isUser = message.role === 'user';
-
   let content;
-  let isCalendlyLink = false;
 
   if (message.role === 'assistant') {
     try {
       const parsedContent = JSON.parse(message.content);
       if (parsedContent.type === 'calendly-link') {
-        isCalendlyLink = true;
         content = <CalendlyButton payload={parsedContent} />;
       } else {
         content = <p className="text-sm text-card-foreground leading-relaxed whitespace-pre-wrap">{message.content}</p>;
@@ -51,7 +56,6 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           <Bot size={18} />
         </div>
       )}
-
       <div
         className={`group relative max-w-2xl ${
           isUser
@@ -60,12 +64,9 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         } rounded-2xl p-4 transition-shadow duration-150`}
       >
         {content}
-
         <div className={`text-xs mt-3 opacity-60 ${isUser ? 'text-right' : 'text-left'}`}>
           {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
-
-        {/* Floating tail effect */}
         <div
           className={`absolute top-4 w-3 h-3 rotate-45 ${
             isUser
@@ -74,7 +75,6 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           } shadow-md`}
         />
       </div>
-
       {isUser && (
         <div className="flex-shrink-0 size-10 rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center shadow-md">
           <User size={18} />
