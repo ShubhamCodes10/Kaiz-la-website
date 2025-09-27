@@ -6,7 +6,7 @@ import Image from "next/image"
 import { Menu, X } from "lucide-react"
 
 const navigationItems = [
-  { name: "Home", href: "#" },
+  { name: "Home", href: "#home" },
   { name: "Services", href: "#services" },
   { name: "About", href: "#about" },
   { name: "Contact", href: "#contact" },
@@ -211,20 +211,9 @@ export function Header() {
 
               <div className="pt-6 border-t border-border mt-4">
                 <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3">
+                 
                   <Link
-                    href="/quote"
-                    onClick={toggleMobileMenu}
-                    className="
-                      flex-1 px-4 py-3 text-primary border border-primary rounded-lg 
-                      hover:bg-primary hover:text-white 
-                      transition-all duration-200 font-medium text-center
-                      focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-                    "
-                  >
-                    Get Quote
-                  </Link>
-                  <Link
-                    href="/start-sourcing"
+                    href="/chat"
                     onClick={toggleMobileMenu}
                     className="
                       flex-1 px-4 py-3 bg-secondary text-white rounded-lg 
