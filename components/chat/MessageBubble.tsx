@@ -1,5 +1,7 @@
 import { type Message } from '@/store/chatStore';
 import { Bot, User, Calendar } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface MessageBubbleProps {
   message: Message;
@@ -30,6 +32,45 @@ function CalendlyButton({ payload }: { payload: any }) {
   );
 }
 
+function getMarkdownComponents() {
+  return {
+    ul: ({ children }: any) => (
+      <ul className="space-y-2 my-4 pl-0 list-none">
+        {children}
+      </ul>
+    ),
+    li: ({ children }: any) => (
+      <li className="flex items-start gap-2 text-sm">
+        <span className="text-primary mt-1.5 text-xs">•</span>
+        <div className="flex-1 leading-relaxed">{children}</div>
+      </li>
+    ),
+    p: ({ children }: any) => (
+      <p className="text-sm leading-relaxed mb-3 last:mb-0">
+        {children}
+      </p>
+    ),
+    hr: () => (
+      <hr className="my-3 border-border/20 border-dashed" />
+    ),
+    strong: ({ children }: any) => (
+      <strong className="font-semibold text-card-foreground">
+        {children}
+      </strong>
+    ),
+    code: ({ children }: any) => (
+      <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">
+        {children}
+      </code>
+    ),
+    pre: ({ children }: any) => (
+      <pre className="bg-muted p-3 rounded-lg overflow-x-auto text-xs">
+        {children}
+      </pre>
+    )
+  };
+}
+
 export function MessageBubble({ message }: MessageBubbleProps) {
   const isUser = message.role === 'user';
   let content;
@@ -43,7 +84,16 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         content = <p className="text-sm text-card-foreground leading-relaxed whitespace-pre-wrap">{message.content}</p>;
       }
     } catch (error) {
-      content = <p className="text-sm text-card-foreground leading-relaxed whitespace-pre-wrap">{message.content}</p>;
+      content = (
+        <div className="prose prose-sm max-w-none dark:prose-invert prose-headings:text-card-foreground prose-p:text-card-foreground prose-p:leading-relaxed prose-strong:text-card-foreground prose-li:text-card-foreground prose-ul:my-3 prose-li:my-1">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={getMarkdownComponents()}
+          >
+            {message.content}
+          </ReactMarkdown>
+        </div>
+      );
     }
   } else {
     content = <p className="text-sm text-primary-foreground leading-relaxed whitespace-pre-wrap">{message.content}</p>;
@@ -61,10 +111,10 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           isUser
             ? 'bg-primary text-primary-foreground shadow-sm hover:shadow-md'
             : 'bg-card text-card-foreground shadow-sm hover:shadow-md'
-        } rounded-2xl p-4 transition-shadow duration-150`}
+        } rounded-2xl p-5 transition-shadow duration-150`}
       >
         {content}
-        <div className={`text-xs mt-3 opacity-60 ${isUser ? 'text-right' : 'text-left'}`}>
+        <div className={`text-xs mt-4 opacity-60 ${isUser ? 'text-right' : 'text-left'}`}>
           {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
         <div

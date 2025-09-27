@@ -69,7 +69,11 @@ export async function processChatRequest(messages: Message[], conversationId: st
       }
 
       if (lowerCaseMessage.includes('book') || lowerCaseMessage.includes('done') || lowerCaseMessage.includes('scheduled')) {
-        return new NextResponse("That's wonderful! Our team will receive the details shortly. We look forward to speaking with you. Have a great day!");
+        if (lead?.scheduledCall) {
+          return new NextResponse("That's wonderful! Our team will receive the details shortly. We look forward to speaking with you. Have a great day!");
+        } else {
+          return new NextResponse("It looks like the booking hasn't been confirmed on my end yet. If you have already booked, that's fine, there might just be a slight delay. If not, please make sure you've selected a time and confirmed the meeting on the scheduling page.");
+        }
       }
 
       const ragResponse = await handleRAG(userMessage.content);
