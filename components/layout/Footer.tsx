@@ -40,7 +40,6 @@ export default function Footer() {
     { name: "How It Works", href: "#how-it-works" },
     { name: "Why Choose Us", href: "#why-choose-us" },
     { name: "Contact Us", href: "#contact" },
-    { name: "Terms", href: "/terms" },
   ]
 
   return (
@@ -109,9 +108,9 @@ export default function Footer() {
             <div className="flex flex-col sm:flex-row justify-between items-center gap-y-4 gap-x-6 text-base text-background/90">
               <p>© {new Date().getFullYear()} Kaiz La. All Rights Reserved.</p>
               <div className="flex items-center gap-x-4">
-                <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
                 <span className="text-background/90">|</span>
-                <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+                <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
               </div>
             </div>
           </motion.div>
