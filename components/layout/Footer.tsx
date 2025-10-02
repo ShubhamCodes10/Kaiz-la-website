@@ -40,6 +40,7 @@ export default function Footer() {
     { name: "How It Works", href: "#how-it-works" },
     { name: "Why Choose Us", href: "#why-choose-us" },
     { name: "Contact Us", href: "#contact" },
+    { name: "Terms", href: "/terms" },
   ]
 
   return (
